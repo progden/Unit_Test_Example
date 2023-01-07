@@ -21,9 +21,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 //@SpringBootTest
-@ExtendWith({ MockitoExtension.class})
+@ExtendWith({ MockitoExtension.class })
 class UnitTestSampleApplicationTests {
-
     private ApplyNewContractUseCase contractService;
     private ApplyNewContractCommand command;
 
@@ -41,7 +40,7 @@ class UnitTestSampleApplicationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {18, 19, 29, 30, 31, 80, 81, 100, 1999})
-    void Arrange_CustomerAgeGreatThen18_Act_ApplyNewSale_Assert_ApplySuccess(int age) {
+    void Given_年齡大於18_When_新申請_Then_申請成功(int age) {
         // Arrange
         command.setCustomerAge(age);
 
@@ -53,7 +52,7 @@ class UnitTestSampleApplicationTests {
     }
 
     @Test
-    void Arrange_CustomerAgeLessThen18_Act_ApplyNewSale_Assert_ApplyFail() {
+    void Given_年齡小於18_When_新申請_Then_申請失敗() {
         // Arrange
         command.setCustomerAge(17);
 
@@ -65,7 +64,7 @@ class UnitTestSampleApplicationTests {
     }
 
     @Test
-    void Arrange_CustomerAgeCreatAndEqualsTo18_Act_ApplyNewSale_Assert_SaveSuccess() {
+    void Given_年齡大於18_When_新申請_Then_儲存成功() {
         // Arrange
         command.setCustomerAge(18);
         when(contractSavePort.save(any())).thenReturn(new Contract());
@@ -79,7 +78,7 @@ class UnitTestSampleApplicationTests {
     }
 
     @Test
-    void Arrange_CustomerAgeCreatAndEqualsTo18_Act_ApplyNewSale_Assert_SaveUserLevel_L0() {
+    void Given_年齡大於等於18_When_新申請_Then_儲存使用者等級_L0() {
         // Arrange
         command.setCustomerAge(18);
         when(contractSavePort.save(any())).thenReturn(new Contract());
@@ -95,7 +94,7 @@ class UnitTestSampleApplicationTests {
     }
 
     @Test
-    void Arrange_CustomerAgeCreatAndEqualsTo30_Act_ApplyNewSale_Assert_SaveUserLevel_LMagician() {
+    void Given_年齡大於等於30_When_新申請_Then_儲存使用者等級_LMagician() {
         // Arrange
         command.setCustomerAge(30);
         when(contractSavePort.save(any())).thenReturn(new Contract());
@@ -111,7 +110,7 @@ class UnitTestSampleApplicationTests {
     }
 //
 //    @Test
-//    void Arrange_CustomerAgeCreatAndEqualsTo18_Act_ApplyNewSale_Assert_SaveSuccess() {
+//    void Given_年齡大於等於18_When_新申請_Then_SaveSuccess() {
 //        // Arrange
 //        command.setCustomerAge(18);
 //        when(contractSavePort.save(any())).thenReturn(new Contract());

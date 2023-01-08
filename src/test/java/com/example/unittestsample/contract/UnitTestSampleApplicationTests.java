@@ -157,7 +157,7 @@ class UnitTestSampleApplicationTests {
         // Assert
         verify(phoneCheckService).isPhoneUsed(any());
         verify(contractSavePort).save(any());
-        assertTrue(rs, "年齡滿 18 應申請成功");
+        assertTrue(rs, "門號尚未使用應申請成功");
     }
 
     @Test

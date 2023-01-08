@@ -46,10 +46,6 @@ class UnitTestSampleApplicationTests {
         givenPhoneNumber(phone);
     }
 
-    private void givenPhoneNumber(String phone) {
-        command.setPhone(phone);
-    }
-
     @ParameterizedTest
     @ValueSource(ints = {18, 19, 29, 30, 31, 80, 81, 100, 1999})
     void Given_年齡大於18_When_新申請_Then_申請成功(int age) {
@@ -87,14 +83,6 @@ class UnitTestSampleApplicationTests {
         // Assert
         verify(contractSavePort).save(contractCaptor.capture());
         assertTrue(rs, "年齡滿 18 應申請成功");
-    }
-
-    private void givenSaveCanCallSuccess() {
-        when(contractSavePort.save(any())).thenReturn(new Contract());
-    }
-
-    private void givenCustomerAge(int customerAge) {
-        command.setCustomerAge(customerAge);
     }
 
     @Test
@@ -145,7 +133,6 @@ class UnitTestSampleApplicationTests {
         assertTrue(rs, "年齡滿 18 應申請成功");
     }
 
-
     @Test
     void Given_介接回傳門號尚未使用_When_新申請_Then_儲存成功() {
         // Arrange
@@ -172,6 +159,18 @@ class UnitTestSampleApplicationTests {
         verify(phoneCheckService).isPhoneUsed(any());
         verify(contractSavePort, never()).save(any());
         assertFalse(rs, "門號已經使用應申請失敗");
+    }
+
+    private void givenPhoneNumber(String phone) {
+        command.setPhone(phone);
+    }
+
+    private void givenSaveCanCallSuccess() {
+        when(contractSavePort.save(any())).thenReturn(new Contract());
+    }
+
+    private void givenCustomerAge(int customerAge) {
+        command.setCustomerAge(customerAge);
     }
 
     private void givenPhoneIsUsed() {

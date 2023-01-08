@@ -4,12 +4,15 @@ import com.example.unittestsample.contract.domain.Contract;
 import com.example.unittestsample.contract.port.in.ApplyNewContractUseCase;
 import com.example.unittestsample.contract.port.out.ContractSavePort;
 import com.example.unittestsample.contract.port.in.ApplyNewContractCommand;
+import com.example.unittestsample.phone.application.PhoneCheckService;
 
 public class ContractService implements ApplyNewContractUseCase {
     private final ContractSavePort contractRepo;
+    private final PhoneCheckService phoneCheckPort;
 
-    public ContractService(ContractSavePort contractRepo) {
+    public ContractService(ContractSavePort contractRepo, PhoneCheckService phoneCheckService) {
         this.contractRepo = contractRepo;
+        this.phoneCheckPort = phoneCheckService;
     }
 
     @Override
@@ -19,10 +22,15 @@ public class ContractService implements ApplyNewContractUseCase {
             return false;
         }
 
-        // execute
+        if (phoneCheckPort.isPhoneUsed(command.getPhone())) {
+            return false;
+        }
 
+        // execute
         Contract contract = new Contract();
-        if(command.getCustomerAge() >= 30) {
+        if(command.getCustomerAge() >= 50) {
+            contract.setUserLevel("LMaster");
+        }else if(command.getCustomerAge() >= 30) {
             contract.setUserLevel("LMagician");
         }else if(command.getCustomerAge()>=18){
             contract.setUserLevel("L0");

@@ -1,6 +1,9 @@
 package com.example.unittestsample.phone.application;
 
-public class PhoneCheckService {
+import com.example.unittestsample.phone.port.in.PhoneCheckPort;
+
+public class PhoneCheckService implements PhoneCheckPort {
+    @Override
     public boolean isPhoneUsed(String phone) {
         return false;
     }

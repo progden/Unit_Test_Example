@@ -5,7 +5,7 @@ import com.example.unittestsample.contract.domain.Contract;
 import com.example.unittestsample.contract.port.in.ApplyNewContractCommand;
 import com.example.unittestsample.contract.port.in.ApplyNewContractUseCase;
 import com.example.unittestsample.contract.port.out.ContractSavePort;
-import com.example.unittestsample.phone.application.PhoneCheckService;
+import com.example.unittestsample.phone.port.in.PhoneCheckPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,12 +33,12 @@ class UnitTestSampleApplicationTests {
     private ArgumentCaptor<Contract> contractCaptor;
 
     @Mock
-    private PhoneCheckService phoneCheckService;
+    private PhoneCheckPort phoneCheckService;
     private String phone;
 
     @BeforeEach
     void setUp() {
-        contractService = new ContractService(contractSavePort, phoneCheckService); //Mockito.mock(ApplyNewContractUseCase.class);
+        contractService = new ContractService(contractSavePort, phoneCheckService);
         command = new ApplyNewContractCommand();
 
         givenCustomerAge(18);

@@ -5,12 +5,13 @@ import com.example.unittestsample.contract.port.in.ApplyNewContractUseCase;
 import com.example.unittestsample.contract.port.out.ContractSavePort;
 import com.example.unittestsample.contract.port.in.ApplyNewContractCommand;
 import com.example.unittestsample.phone.application.PhoneCheckService;
+import com.example.unittestsample.phone.port.in.PhoneCheckPort;
 
 public class ContractService implements ApplyNewContractUseCase {
     private final ContractSavePort contractRepo;
-    private final PhoneCheckService phoneCheckPort;
+    private final PhoneCheckPort phoneCheckPort;
 
-    public ContractService(ContractSavePort contractRepo, PhoneCheckService phoneCheckService) {
+    public ContractService(ContractSavePort contractRepo, PhoneCheckPort phoneCheckService) {
         this.contractRepo = contractRepo;
         this.phoneCheckPort = phoneCheckService;
     }

@@ -38,8 +38,12 @@ public class ContractService implements ApplyNewContractUseCase {
         }else if(command.getCustomerAge()>=18){
             contract.setUserLevel("L0");
         }
-        contractRepo.save(contract);
 
+        contract = contractRepo.save(contract);
+        if(contract.getContractId() == null)
+        {
+            return false;
+        }
         return true;
     }
 }

@@ -34,7 +34,8 @@ class UnitTestSampleApplicationTests {
     @Captor
     private ArgumentCaptor<Contract> contractCaptor;
 
-    private String phone;
+    private String unusedPhone = "0912345678";
+    private String usedPhone = "0987654321";
 
     @BeforeEach
     void setUp() {
@@ -42,8 +43,7 @@ class UnitTestSampleApplicationTests {
         command = new ApplyNewContractCommand();
 
         givenCustomerAge(18);
-        phone = "0912345678";
-        givenPhoneNumber(phone);
+        defaultPhoneIsNotUsed();
         defaultSaveCanCallSuccess();
     }
 
@@ -134,7 +134,6 @@ class UnitTestSampleApplicationTests {
     void Given年齡大於等於40_When新申請_Then儲存使用者等級LMaster() {
         // Arrange
         givenCustomerAge(40);
-        givenSaveCanCallSuccess();
 
         // Act
         var rs = contractService.applyNewContract(command);
@@ -150,7 +149,6 @@ class UnitTestSampleApplicationTests {
     void Given年齡大於等於60_When新申請_Then儲存使用者等級LSage() {
         // Arrange
         givenCustomerAge(60);
-        givenSaveCanCallSuccess();
 
         // Act
         var rs = contractService.applyNewContract(command);
@@ -162,13 +160,38 @@ class UnitTestSampleApplicationTests {
         assertTrue(rs, "年齡滿 18 應申請成功");
     }
 
+    @Test
+    void Given儲存銷售資訊服務_進行申辦_應有正確呼叫(){
+        // Arrange
+
+        // Act
+        contractService.applyNewContract(command);
+
+        // Assert
+        verify(contractSavePort).save(any());
+    }
+
+    @Test
+    void Given儲存銷售資訊服務且回傳儲存成功_進行申辦_應能成功申辦門號(){
+        // Arrange
+
+        // Act
+        var rs = contractService.applyNewContract(command);
+
+        // Assert
+        verify(contractSavePort).save(any());
+        assertTrue(rs, "應能成功申辦門號");
+    }
+
     private void givenPhoneNumber(String phone) {
         command.setPhone(phone);
     }
 
     private void defaultSaveCanCallSuccess() {
+        Contract t = new Contract();
+        t.setContractId("default-contract-seqence");
         lenient(). // 可以不發生
-                when(contractSavePort.save(any())).thenReturn(new Contract());
+                when(contractSavePort.save(any())).thenReturn(t);
     }
 
     private void givenSaveCanCallSuccess() {
@@ -179,11 +202,19 @@ class UnitTestSampleApplicationTests {
         command.setCustomerAge(customerAge);
     }
 
+
     private void givenPhoneIsUsed() {
-        when(phoneCheckService.isPhoneUsed(phone)).thenReturn(true);
+        command.setPhone(usedPhone);
+        when(phoneCheckService.isPhoneUsed(usedPhone)).thenReturn(true);
+    }
+
+    private void defaultPhoneIsNotUsed() {
+        command.setPhone(unusedPhone);
+        lenient().when(phoneCheckService.isPhoneUsed(unusedPhone)).thenReturn(false);
     }
 
     private void givenPhoneIsNotUsed() {
-        when(phoneCheckService.isPhoneUsed(phone)).thenReturn(false);
+        command.setPhone(unusedPhone);
+        when(phoneCheckService.isPhoneUsed(unusedPhone)).thenReturn(false);
     }
 }

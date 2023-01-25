@@ -29,7 +29,9 @@ public class ContractService implements ApplyNewContractUseCase {
 
         // execute
         Contract contract = new Contract();
-        if(command.getCustomerAge() >= 50) {
+        if(command.getCustomerAge() >= 60) {
+            contract.setUserLevel("LSage");
+        }else if(command.getCustomerAge() >= 40) {
             contract.setUserLevel("LMaster");
         }else if(command.getCustomerAge() >= 30) {
             contract.setUserLevel("LMagician");

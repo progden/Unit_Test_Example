@@ -27,13 +27,13 @@ class UnitTestSampleApplicationTests {
     private ApplyNewContractCommand command;
 
     @Mock
+    private PhoneCheckPort phoneCheckService;
+    @Mock
     private ContractSavePort contractSavePort;
 
     @Captor
     private ArgumentCaptor<Contract> contractCaptor;
 
-    @Mock
-    private PhoneCheckPort phoneCheckService;
     private String phone;
 
     @BeforeEach
@@ -44,11 +44,12 @@ class UnitTestSampleApplicationTests {
         givenCustomerAge(18);
         phone = "0912345678";
         givenPhoneNumber(phone);
+        defaultSaveCanCallSuccess();
     }
 
     @ParameterizedTest
     @ValueSource(ints = {18, 19, 29, 30, 31, 80, 81, 100, 1999})
-    void Given_年齡大於18_When_新申請_Then_申請成功(int age) {
+    void Given年齡大於18_When新申請_Then申請成功(int age) {
         // Arrange
         givenCustomerAge(age);
 
@@ -60,7 +61,7 @@ class UnitTestSampleApplicationTests {
     }
 
     @Test
-    void Given_年齡小於18_When_新申請_Then_申請失敗() {
+    void Given年齡小於18_When新申請_Then申請失敗() {
         // Arrange
         givenCustomerAge(17);
 
@@ -69,68 +70,6 @@ class UnitTestSampleApplicationTests {
 
         // Assert
         assertFalse(rs, "年齡未滿 18 應申請失敗");
-    }
-
-    @Test
-    void Given_年齡大於18_When_新申請_Then_儲存成功() {
-        // Arrange
-        givenCustomerAge(18);
-        givenSaveCanCallSuccess();
-
-        // Act
-        var rs = contractService.applyNewContract(command);
-
-        // Assert
-        verify(contractSavePort).save(contractCaptor.capture());
-        assertTrue(rs, "年齡滿 18 應申請成功");
-    }
-
-    @Test
-    void Given_年齡大於等於18_When_新申請_Then_儲存使用者等級_L0() {
-        // Arrange
-        givenCustomerAge(18);
-        givenSaveCanCallSuccess();
-
-        // Act
-        var rs = contractService.applyNewContract(command);
-
-        // Assert
-        verify(contractSavePort).save(contractCaptor.capture());
-        var param = contractCaptor.getValue();
-        assertEquals("L0", param.getUserLevel());
-        assertTrue(rs, "年齡滿 18 應申請成功");
-    }
-
-    @Test
-    void Given_年齡大於等於30_When_新申請_Then_儲存使用者等級_LMagician() {
-        // Arrange
-        givenCustomerAge(30);
-        givenSaveCanCallSuccess();
-
-        // Act
-        var rs = contractService.applyNewContract(command);
-
-        // Assert
-        verify(contractSavePort).save(contractCaptor.capture());
-        var param = contractCaptor.getValue();
-        assertEquals("LMagician", param.getUserLevel());
-        assertTrue(rs, "年齡滿 18 應申請成功");
-    }
-
-    @Test
-    void Given_年齡大於等於50_When_新申請_Then_儲存使用者等級_LMaster() {
-        // Arrange
-        givenCustomerAge(50);
-        givenSaveCanCallSuccess();
-
-        // Act
-        var rs = contractService.applyNewContract(command);
-
-        // Assert
-        verify(contractSavePort).save(contractCaptor.capture());
-        var param = contractCaptor.getValue();
-        assertEquals("LMaster", param.getUserLevel());
-        assertTrue(rs, "年齡滿 18 應申請成功");
     }
 
     @Test
@@ -161,8 +100,75 @@ class UnitTestSampleApplicationTests {
         assertFalse(rs, "門號已經使用應申請失敗");
     }
 
+    @Test
+    void Given年齡大於等於18_When新申請_Then儲存使用者等級L0() {
+        // Arrange
+        givenCustomerAge(18);
+
+        // Act
+        var rs = contractService.applyNewContract(command);
+
+        // Assert
+        verify(contractSavePort).save(contractCaptor.capture());
+        var param = contractCaptor.getValue();
+        assertEquals("L0", param.getUserLevel());
+        assertTrue(rs, "年齡滿 18 應申請成功");
+    }
+
+    @Test
+    void Given年齡大於等於30_When新申請_Then儲存使用者等級LMagician() {
+        // Arrange
+        givenCustomerAge(30);
+
+        // Act
+        var rs = contractService.applyNewContract(command);
+
+        // Assert
+        verify(contractSavePort).save(contractCaptor.capture());
+        var param = contractCaptor.getValue();
+        assertEquals("LMagician", param.getUserLevel());
+        assertTrue(rs, "年齡滿 18 應申請成功");
+    }
+
+    @Test
+    void Given年齡大於等於40_When新申請_Then儲存使用者等級LMaster() {
+        // Arrange
+        givenCustomerAge(40);
+        givenSaveCanCallSuccess();
+
+        // Act
+        var rs = contractService.applyNewContract(command);
+
+        // Assert
+        verify(contractSavePort).save(contractCaptor.capture());
+        var param = contractCaptor.getValue();
+        assertEquals("LMaster", param.getUserLevel());
+        assertTrue(rs, "年齡滿 18 應申請成功");
+    }
+
+    @Test
+    void Given年齡大於等於60_When新申請_Then儲存使用者等級LMaster() {
+        // Arrange
+        givenCustomerAge(60);
+        givenSaveCanCallSuccess();
+
+        // Act
+        var rs = contractService.applyNewContract(command);
+
+        // Assert
+        verify(contractSavePort).save(contractCaptor.capture());
+        var param = contractCaptor.getValue();
+        assertEquals("LSage", param.getUserLevel());
+        assertTrue(rs, "年齡滿 18 應申請成功");
+    }
+
     private void givenPhoneNumber(String phone) {
         command.setPhone(phone);
+    }
+
+    private void defaultSaveCanCallSuccess() {
+        lenient(). // 可以不發生
+                when(contractSavePort.save(any())).thenReturn(new Contract());
     }
 
     private void givenSaveCanCallSuccess() {

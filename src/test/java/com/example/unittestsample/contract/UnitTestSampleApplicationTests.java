@@ -73,7 +73,7 @@ class UnitTestSampleApplicationTests {
     }
 
     @Test
-    void Given_介接回傳門號尚未使用_When_新申請_Then_儲存成功() {
+    void Given介接回傳門號尚未使用_When新申請_Then儲存成功() {
         // Arrange
         givenPhoneIsNotUsed();
 
@@ -87,7 +87,7 @@ class UnitTestSampleApplicationTests {
     }
 
     @Test
-    void Given_介接回傳門號已經使用_When_新申請_Then_儲存失敗() {
+    void Given介接回傳門號已經使用_When新申請_Then儲存失敗() {
         // Arrange
         givenPhoneIsUsed();
 
@@ -147,7 +147,7 @@ class UnitTestSampleApplicationTests {
     }
 
     @Test
-    void Given年齡大於等於60_When新申請_Then儲存使用者等級LMaster() {
+    void Given年齡大於等於60_When新申請_Then儲存使用者等級LSage() {
         // Arrange
         givenCustomerAge(60);
         givenSaveCanCallSuccess();
